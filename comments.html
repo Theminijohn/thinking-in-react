@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="bower_components/react/react.js"></script>
+        <script src="bower_components/react/JSXTransformer.js"></script>
+        <link  href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+      <div id="container"></div>
+
+
+      <script type="text/jsx">
+      /** @jsx React.DOM */
+
+
+      /*
+      #### Component Structure =>
+      - CommentBox
+        - CommentList
+          - Comment
+        - CommentForm
+      */
+
+      // CommentBox Component
+      var CommentBox = React.createClass({
+        render: function() {
+          return(
+            // JSX precompiler
+            React.DOM.div({className: "commentBox"},
+              "Hello, world! I'm a Comment Box!"
+            )
+          );
+        }
+      });
+
+      // Render it
+      // instantiates the root component, starts the framework, and injects
+      // the markup into a raw DOM element, provided as the second argument.
+      React.renderComponent(
+        CommentBox({}),
+        document.getElementById('container')
+      );
+
+
+      </script>
+    </body>
+</html>
