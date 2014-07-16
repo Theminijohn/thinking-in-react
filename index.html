@@ -2,10 +2,10 @@
 
 <html lang="en">
 <head>
-  <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel=
-  "stylesheet" type="text/css">
-
-  <title></title>
+  <script src="bower_components/react/react.js"></script>
+  <script src="bower_components/react/JSXTransformer.js"></script>
+  <link  href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+  <title>Thinking React, YaY</title>
 </head>
 
 <body>
@@ -15,39 +15,63 @@
       "search">
     </div>
 
-    <div class="row spacer col-lg-4 col-lg-offset-4">
-      <table width="100%">
-        <thead>
-          <tr>
-            <th>Title</th>
-
-            <th>Link</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr>
-            <td>Sample episode 1</td>
-
-            <td>
-              <a href="#">View</a>
-            </td>
-          </tr>
-
-          <tr>
-            <td>Sample episode 2</td>
-
-            <td>
-              <a href="#">View</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
 
   <script type="text/jsx">
     /** @jsx React.DOM **/
+
+    // The Episode Row Component
+    var EpisodeRow = React.createClass({
+      render: function() {
+        return (
+          <tr>
+            // Single {} !!
+            <td>{this.props.episode.title}</td>
+            <td><a href="#">View</a></td>
+          </tr>
+        );
+      }
+    });
+
+    // The Episode Table Component
+    var EpisodeTable = React.createClass({
+      render: function(){
+        var rows = this.props.episodes.map(function(episode){
+          return <EpisodeRow key={episode.title} episode={episode} />;
+        });
+
+        <div class="row spacer col-lg-4 col-lg-offset-4">
+          <table width="100%">
+            <thead>
+              <tr>
+                <th>Title</th>
+
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows}
+            </tbody>
+          </table>
+        </div>
+      }
+    });
+
+    // Test Data
+    var episodes = [{
+          title : "Angular with Yeoman",
+      },{
+          title : "Using D3 with Rickshaw and Angular",
+      },{
+          title : "Canvas with paper.js",
+      },{
+          title : "Express.js middleware",
+      },{
+          title : "MEAN stack - episode 1",
+      }
+    ];
+
+    // Render the Component
+    React.renderComponent(<EpisodeTable episodes={episodes} />, document.getElementById('container'));
   </script>
 
 
