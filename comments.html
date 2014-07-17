@@ -34,7 +34,7 @@
                     <h3>Comments</h3>
                   </div>
                   <div className="panel-body">
-                    <CommentList />
+                    <CommentList data={this.props.data} />
                     <CommentForm />
                   </div>
                 </div>
@@ -47,10 +47,16 @@
       // CommentList Component
       var CommentList = React.createClass({
         render: function() {
-          return(
+          var commentNodes = this.props.data.map(function (comment) {
+            return (
+              <Comment author={comment.author}>
+                {comment.text}
+              </Comment>
+            );
+          });
+          return (
             <div className="commentList">
-              <Comment author="Pete Hunt">This is one comment</Comment>
-              <Comment author="Jordan Walke">This is *another* comment</Comment>
+              {commentNodes}
             </div>
           );
         }
@@ -68,18 +74,26 @@
       });
 
       // Comment Component
+      var converter = new Showdown.converter();
       var Comment = React.createClass({
         render: function() {
+          var rawMarkup = converter.makeHtml(this.props.children.toString());
           return (
             <div className="comment">
               <h2 className="commentAuthor">
                 {this.props.author}
               </h2>
-              {this.props.children}
+               <span dangerouslySetInnerHTML={{__html: rawMarkup}} />
             </div>
           );
         }
       });
+
+      // Our Data
+      var data = [
+        {author: "Pete Hunt", text: "This is one comment"},
+        {author: "Jordan Walke", text: "This is *another* comment"}
+      ];
 
 
 
@@ -87,7 +101,7 @@
       // instantiates the root component, starts the framework, and injects
       // the markup into a raw DOM element, provided as the second argument.
       React.renderComponent(
-        CommentBox({}),
+        <CommentBox data={data} />,
         document.getElementById('container')
       );
 
