@@ -6,6 +6,7 @@
         <script src="bower_components/react/JSXTransformer.js"></script>
         <link  href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
         <script src="http://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
     </head>
     <body>
       <div id="container" style="padding-top: 60px"></div>
@@ -25,6 +26,25 @@
 
       // CommentBox Component
       var CommentBox = React.createClass({
+        getInitialState: function() {
+            return {data: []};
+          },
+          loadCommentsFromServer: function() {
+            $.ajax({
+              url: this.props.url,
+              dataType: 'json',
+              success: function(data) {
+                this.setState({data: data});
+              }.bind(this),
+              error: function(xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+              }.bind(this)
+            });
+          },
+          componentWillMount: function() {
+            this.loadCommentsFromServer();
+            setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+          },
         render: function() {
           return(
             <div className="row">
@@ -34,7 +54,7 @@
                     <h3>Comments</h3>
                   </div>
                   <div className="panel-body">
-                    <CommentList data={this.props.data} />
+                    <CommentList data={this.state.data} />
                     <CommentForm />
                   </div>
                 </div>
@@ -101,7 +121,7 @@
       // instantiates the root component, starts the framework, and injects
       // the markup into a raw DOM element, provided as the second argument.
       React.renderComponent(
-        <CommentBox data={data} />,
+        <CommentBox url="react_data.json" pollInterval={2000} />,
         document.getElementById('container')
       );
 
